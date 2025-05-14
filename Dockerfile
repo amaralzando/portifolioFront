@@ -1,37 +1,38 @@
-# Stage 1 - Builder
+# Stage 1 - Build
 FROM node:20-alpine AS builder
 
-WORKDIR /app
+# Define a raiz do projeto
+WORKDIR /portifolio
 
-# Copia os arquivos de dependência do frontend
-COPY frontend/package*.json ./frontend/
+# Copia package.json e lock para /portifolio/web
+COPY frontend/package*.json ./web/
 
-# ✅ Removido: COPY frontend/.npmrc ./frontend/
-
-# Instala dependências
-WORKDIR /app/frontend
+# Entra na pasta web para instalar
+WORKDIR /portifolio/web
 RUN npm install
 
-# Copia todo o código do frontend
-COPY frontend ./frontend
+# Volta à raiz e copia o projeto inteiro
+WORKDIR /portifolio
+COPY frontend ./web
 
-# Executa o build do Next.js
+# Volta novamente para web e builda
+WORKDIR /portifolio/web
 RUN npm run build
 
 # Stage 2 - Produção
 FROM node:20-alpine
 
-WORKDIR /app/frontend
+WORKDIR /portifolio/web
 
 ENV NODE_ENV=production
 ENV PORT=3001
-
 EXPOSE 3001
 
-COPY --from=builder /app/frontend/.next ./.next
-COPY --from=builder /app/frontend/public ./public
-COPY --from=builder /app/frontend/node_modules ./node_modules
-COPY --from=builder /app/frontend/package.json ./package.json
-COPY --from=builder /app/frontend/next.config.js ./next.config.js
+# Copia os arquivos finais do builder
+COPY --from=builder /portifolio/web/.next ./.next
+COPY --from=builder /portifolio/web/public ./public
+COPY --from=builder /portifolio/web/node_modules ./node_modules
+COPY --from=builder /portifolio/web/package.json ./package.json
+COPY --from=builder /portifolio/web/next.config.js ./next.config.js
 
 CMD ["npm", "start"]
