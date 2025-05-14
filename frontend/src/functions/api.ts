@@ -1,4 +1,4 @@
-const baseURL = process.env.API_URL;
+const baseURL = process.env.API_URL || "https://portifolioback.gasatec.com.br";
 
 export async function httpGet(url: string) {
 	if (!baseURL) {
