@@ -1,18 +1,32 @@
-const baseURL = process.env.NEXT_PUBLIC_API_URL
+const baseURL = process.env.NEXT_PUBLIC_API_URL;
 
 export async function httpGet(url: string) {
-	console.log(normalizarUrl(`${baseURL}/${url}`))
-	const response = await fetch(normalizarUrl(`${baseURL}/${url}`))
-	return response.json()
-}
+	if (!baseURL) {
+		console.error("❌ NEXT_PUBLIC_API_URL não está definido.");
+		return null;
+	}
 
-function normalizarUrl(url?: string) {
+	const fullUrl = normalizarUrl(`${baseURL}/${url}`);
+	console.log("🔗 GET", fullUrl);
+
 	try {
-		if (!url || !url.includes("://")) return url ?? ""
-		const [protocolo, restante] = url.split("://")
-		return `${protocolo}://${restante.replaceAll(/\/{2,}/g, "/")}`
-	} catch {
-		return url ?? ""
+		const response = await fetch(fullUrl);
+		if (!response.ok) {
+			throw new Error(`Erro HTTP: ${response.status} - ${response.statusText}`);
+		}
+		return await response.json();
+	} catch (error) {
+		console.error("❌ Erro na requisição:", error);
+		return null;
 	}
 }
 
+function normalizarUrl(url?: string): string {
+	try {
+		if (!url || !url.includes("://")) return url ?? "";
+		const [protocolo, restante] = url.split("://");
+		return `${protocolo}://${(restante ?? "").replaceAll(/\/{2,}/g, "/")}`;
+	} catch {
+		return url ?? "";
+	}
+}
