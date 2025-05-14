@@ -33,7 +33,7 @@ COPY --from=builder /portifolio/web/.next ./.next
 COPY --from=builder /portifolio/web/public ./public
 COPY --from=builder /portifolio/web/node_modules ./node_modules
 COPY --from=builder /portifolio/web/package.json ./package.json
-COPY --from=builder /portifolio/web/next.config.js ./next.config.js
+COPY --from=builder /portifolio/web/next.config.ts ./next.config.ts
 
 CMD ["npm", "start"]
 
