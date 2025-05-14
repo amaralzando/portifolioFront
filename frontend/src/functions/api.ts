@@ -1,3 +1,5 @@
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
+
 const baseURL = process.env.API_URL || "https://portifolioback.gasatec.com.br";
 
 export async function httpGet(url: string) {
