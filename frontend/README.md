@@ -69,7 +69,7 @@ Além de apresentar os projetos do desenvolvedor, a aplicação incorpora agente
 9. Crie um arquivo `.env` na pasta web e preencha com as seguintes informações, sendo que a URL da API é a URL do backend e a segunda variável deve ter como valor a URL que extraimos no n8n:
 
     ```
-    NEXT_PUBLIC_API_URL=
+    API_URL=
     NEXT_PUBLIC_CHAT_WEBHOOK=
     ```
 

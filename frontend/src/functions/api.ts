@@ -1,8 +1,8 @@
-const baseURL = process.env.NEXT_PUBLIC_API_URL;
+const baseURL = process.env.API_URL;
 
 export async function httpGet(url: string) {
 	if (!baseURL) {
-		console.error("❌ NEXT_PUBLIC_API_URL não está definido.");
+		console.error("❌ API_URL não está definido.");
 		return null;
 	}
 
