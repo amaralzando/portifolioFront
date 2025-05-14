@@ -6,8 +6,13 @@ export async function httpGet(url: string) {
 	return response.json()
 }
 
-function normalizarUrl(url: string) {
-	const protocolo = url.split("://")[0]
-	const restante = url.split("://")[1]
-	return `${protocolo}://${restante.replaceAll(/\/{2,}/g, "/")}`
+function normalizarUrl(url?: string) {
+	try {
+		if (!url || !url.includes("://")) return url ?? ""
+		const [protocolo, restante] = url.split("://")
+		return `${protocolo}://${restante.replaceAll(/\/{2,}/g, "/")}`
+	} catch {
+		return url ?? ""
+	}
 }
+
