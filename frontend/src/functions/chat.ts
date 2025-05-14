@@ -9,16 +9,18 @@ export default async function conversar(
 	if (!webhookUrl) return null
 
 	const resposta = await fetch(webhookUrl, {
-		method: "POST",
-		headers: {
-			"Content-Type": "application/json",
-		},
-		body: JSON.stringify({
-			chatId,
-			mensagem: mensagem.texto,
-		}),
-	})
+	method: "POST",
+	headers: {
+		"Content-Type": "application/json",
+	},
+	body: JSON.stringify({
+		chatId,
+		mensagem: mensagem.texto,
+	}),
+	});
 
-	const msg = await resposta.json()
-	return msg.resposta
+	const msg = await resposta.json();
+	console.log(msg[0])
+	return msg[0].response;
+
 }
