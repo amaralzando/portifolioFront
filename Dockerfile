@@ -1,6 +1,7 @@
 # Stage 1 - Build
 FROM node:20-alpine AS builder
 
+# Cria estrutura esperada
 WORKDIR /portifolio
 
 # Copia arquivos de dependência
@@ -10,16 +11,13 @@ COPY frontend/package*.json ./web/
 WORKDIR /portifolio/web
 RUN npm install
 
-# Copia código fonte e core
+# Volta à raiz e copia o frontend + core
 WORKDIR /portifolio
 COPY frontend ./web
-COPY core ./core
+COPY core ./core 
 
-# Transpila o next.config.ts
+# Volta para web e builda o Next.js
 WORKDIR /portifolio/web
-RUN npm run prebuild
-
-# Builda o Next.js
 RUN npm run build
 
 # Stage 2 - Runtime
@@ -35,6 +33,7 @@ COPY --from=builder /portifolio/web/.next ./.next
 COPY --from=builder /portifolio/web/public ./public
 COPY --from=builder /portifolio/web/node_modules ./node_modules
 COPY --from=builder /portifolio/web/package.json ./package.json
-COPY --from=builder /portifolio/web/dist/next.config.js ./next.config.js
+COPY --from=builder /portifolio/web/next.config.ts ./next.config.ts
 
 CMD ["npm", "start"]
+
